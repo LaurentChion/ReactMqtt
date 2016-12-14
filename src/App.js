@@ -1,21 +1,81 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, {Component} from 'react'
+import styles from './css/App.css'
 
-class App extends Component {
+import SearchBar from './components/SearchBar'
+import SensorList from './components/SensorList'
+import Information from './components/Information'
+
+import Sensor from './model/Sensor'
+
+import * as mqttApi from './api/mqttApi';
+
+class App extends React.Component{
+  constructor(props) {
+    super(props);
+    this.state = ({
+      sensors: [],
+      information:{
+        id: '',
+        data: {
+          value: '',
+        },
+      },
+    });
+    this.initConnection = this.initConnection.bind(this);
+    this.addSensor = this.addSensor.bind(this);
+    this.updateSensor = this.updateSensor.bind(this);
+    this.getInformation = this.getInformation.bind(this);
+  }
+
+  initConnection(chemin) {
+    mqttApi.initConnection(chemin, this.addSensor, this.updateSensor);
+  }
+
+  addSensor(sensor) {
+    const copy = this.state.sensors;
+    copy.push(sensor);
+    this.setState({
+      sensors: copy,
+    })
+  }
+  updateSensor(sensor) {
+    const copy = this.state.sensors
+    for (let i=0; i<copy.length; i++) {
+      if(copy[i].id === sensor.id) {
+        copy[i].data.value = sensor.value;
+        this.setState({
+          sensors: copy,
+        });
+      }
+    }
+  }
+
+  getInformation(id) {
+    const copy = this.state.sensors;
+    for (let i=0; i<copy.length; i++) {
+      if(copy[i].id === id) {
+        this.setState({
+          information: copy[i],
+        });
+      }
+    }
+  }
+
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+      <div className={styles.app}>
+        <header><SearchBar
+          initConnection={this.initConnection}
+          addSensor={this.addSensor}
+          updateSensor={this.updateSensor} />
+        </header>
+        <div className="AppContainer">
+          <SensorList sensors={this.state.sensors} getInformation={this.getInformation}/>
+          <Information information={this.state.information}/>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
       </div>
     );
   }
 }
 
-export default App;
+export default App

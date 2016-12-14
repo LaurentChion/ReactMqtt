@@ -1,0 +1,14 @@
+.app {
+
+}
+
+header {
+  display: flex;
+  background-color: #555;
+  height: 110px;
+  color: #ff7700;
+}
+
+.AppContainer{
+  display: flex;
+}
