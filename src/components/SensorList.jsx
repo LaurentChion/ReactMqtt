@@ -1,25 +1,27 @@
-import React, {Component} from 'react'
+import React from 'react'
 import styles from '../css/SensorList.css'
 
 import Sensor from './Sensor'
-import Home from './Home'
 
-class SensorList extends React.Component{
-  render() {
-    let rows = [];
-    for (var i=0; i < this.props.sensors.length; i++) {
-      const id = this.props.sensors[i].id;
-      rows.push(<Sensor id={id} getInformation={this.props.getInformation} key={i}/>);
-    }
+import {connect} from 'react-redux';
 
-    return (
-      <div className="SensorListContainer">
-        <h2>Sensors</h2>
-          {/* Afficher la liste de sensors*/}
-          {rows}
-      </div>
-    );
+const SensorList = ({sensors}) => {
+  return (
+    <div className="SensorListContainer">
+      <h2>Sensors</h2>
+        {
+          sensors.map(function(object, i) {
+            return (<Sensor id={object.id} key={i} />);
+          }
+        )}
+    </div>
+  );
+}
+
+const mapStateToProps = (state) => {
+  return {
+    sensors: state.get('sensors'),
   }
 }
 
-export default SensorList
+export default connect(mapStateToProps, null)(SensorList)

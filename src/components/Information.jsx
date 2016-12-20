@@ -1,17 +1,23 @@
-import React, {Component} from 'react'
+import React from 'react'
 import styles from '../css/Information.css'
 
-class Information extends React.Component{
+import {connect} from 'react-redux';
 
-  render() {
-    return (
-      <div className="InformationContainer">
-        <h2>{this.props.information.id}</h2>
-        <h3>Valeur : {this.props.information.data.value}</h3>
-        <h3>Historique : en construction </h3>
-      </div>
-    );
+const Information = ({id, value}) => {
+  return (
+    <div className="InformationContainer">
+      <h2>Nom : {id}</h2>
+      <h3>Valeur : {value}</h3>
+      <h3>Historique : en construction </h3>
+    </div>
+  );
+}
+
+const mapStateToProps = (state) => {
+  return {
+    id: state.get('information').id,
+    value: state.get('information').data.value,
   }
 }
 
-export default Information
+export default connect(mapStateToProps, null)(Information)

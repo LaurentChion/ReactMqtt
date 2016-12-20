@@ -2,8 +2,10 @@ import Sensor from '../model/Sensor'
 
 import mqtt from 'mqtt'
 
+import {addAction, updateAction} from '../redux/actions';
+import {store} from '../index.js'
 
-export function initConnection(chemin, addSensor, updateSensor) {
+export function initConnection(chemin) {
   // connection
   //console.log("connexion en cours ...");
   const clientMQTT = mqtt.connect('mqtt://'+chemin);
@@ -22,20 +24,16 @@ export function initConnection(chemin, addSensor, updateSensor) {
     // si le sensor existe déja
     if(Sensor.idIsValid(id)) {
       try {
-          const s = new Sensor(split[1], split[1], json.type, data);
-          addSensor(s);
-          // console.log(`Creation d'un sensor : ${s}`);
+        const s = new Sensor(split[1], split[1], json.type, data);
+          //console.log(`Creation d'un sensor : ${s}`);
+          store.dispatch(addAction(s));
       } catch (e) {
         // console.log(`Error create sensor : ${e}`);
       }
     }
     else {
-      console.log("Update");
-      const up = {
-        id,
-        value
-      }
-      updateSensor(up);
+      //console.log("Update");
+      store.dispatch(updateAction(id, value));
     }
   });
 }
