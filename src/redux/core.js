@@ -9,7 +9,6 @@ export const INITIAL_STATE = Map()
     id: '',
     data:'',
   })
-  .set('test', false)
   ;
 
 export const changeTerm = (state, term) => {
@@ -26,7 +25,6 @@ export const addSensor = (state, sensor) => {
 }
 
 export const updateSensor = (state, id, value) => {
-  // TODO : à implémenter
   let nextState = state;
 
   state.get('sensors').map(
@@ -51,9 +49,10 @@ export const selectSensor = (state, id) => {
   state.get('sensors').map(
     (object, i) => {
       if (object.id === id) {
-        sensor = object;
+        sensor.id = object.id;
+        sensor.data = object.data
       }
     }
   );
-  return state.set('information', sensor).set('test', !state.get('test'));
+  return state.set('information', sensor);
 }
