@@ -1,22 +1,14 @@
-import React from 'react'
-import styles from './css/App.css'
+import React from 'react';
+import styles from './css/App.css';
 
-import SearchBar from './components/SearchBar'
-import SensorList from './components/SensorList'
-import Information from './components/Information'
+import SearchBar from './components/SearchBar';
 
-const App = () => {
-  return (
-    <div className={styles.app}>
-      <header>
-        <SearchBar />
-      </header>
-      <div className="AppContainer">
-        <SensorList/>
-        <Information/>
-      </div>
-    </div>
-  );
-}
+const App = () => (
+  <div className={ styles.app }>
+    <header>
+      <SearchBar />
+    </header>
+  </div>
+);
 
 export default App;

@@ -1,28 +1,42 @@
-import {Map, List} from 'immutable';
+import { Map, List } from 'immutable';
 
-import {initConnection} from '../api/mqttApi'
+import { close, listening } from '../api/mqttApi';
 
 export const INITIAL_STATE = Map()
+  .set('clientMQTT', {})
+  .set('connect', 'OFF')
   .set('sensors', List())
-  .set('searchTerm', List())
+  .set('searchTerm', '')
   .set('information', {
     id: '',
-    data:'',
+    data: '',
   })
   ;
 
-export const changeTerm = (state, term) => {
-  return state.set('searchTerm', term);
-}
+export const changeTerm = (state, term) => state.set('searchTerm', term);
 
-export const connectMqtt = (state, address) => {
-  initConnection(address);
-  return state;
-}
+export const closeMqtt = (state) => {
+  // déconnecter le client mqtt et vider le tableau de sensor
+  close(state.get('clientMQTT'));
+  return INITIAL_STATE;
+};
 
-export const addSensor = (state, sensor) => {
-  return state.set('sensors', state.get('sensors').push(sensor));
-}
+export const listen = state => state.set('clientMQTT', listening(state.get('clientMQTT')));
+
+export const addSensor = (state, sensor) => state.set('sensors', state.get('sensors').push(sensor));
+
+export const selectSensor = (state, id) => {
+  const sensor = [];
+  state.get('sensors').map(
+    (object, i) => {
+      if (object.id === id) {
+        sensor.id = object.id;
+        sensor.data = object.data;
+      }
+    },
+  );
+  return state.set('information', sensor);
+};
 
 export const updateSensor = (state, id, value) => {
   let nextState = state;
@@ -35,24 +49,11 @@ export const updateSensor = (state, id, value) => {
         const nextSensors = state.get('sensors').set(i, sensor);
         nextState = state.set('sensors', nextSensors);
       }
-    }
+    },
   );
   // mettre a jour la vue information si l'id est le meme
   if (nextState.get('information').id === id) {
     return selectSensor(nextState, id);
   }
   return nextState;
-}
-
-export const selectSensor = (state, id) => {
-  let sensor = [];
-  state.get('sensors').map(
-    (object, i) => {
-      if (object.id === id) {
-        sensor.id = object.id;
-        sensor.data = object.data
-      }
-    }
-  );
-  return state.set('information', sensor);
-}
+};

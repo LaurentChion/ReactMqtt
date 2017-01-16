@@ -1,48 +1,58 @@
-import React from 'react'
+import React from 'react';
 
-import styles from '../css/SearchBar.css'
+import { connect } from 'react-redux';
 
-import {connect} from 'react-redux';
-import {changeTermAction, connectMqtt} from '../redux/actions';
+import { withRouter } from 'react-router';
 
-const SearchBar = ({term, changeInput, handleEnterPress}) => {
-  return (
-    <div className="SearchBarContainer">
-      <h3>URL du Brocker:</h3>
-      <input
-        onChange={
-          (event) => {
-            changeInput(event.target.value);
+import styles from '../css/SearchBar.css';
+
+import { changeTermAction, connectMqttAction } from '../redux/actions';
+
+const SearchBar = ({ term, changeInput, handleEnterPress, router }) => (
+  <div className='SearchBarContainer'>
+    <h3>URL du Brocker:</h3>
+    <input
+      onChange={
+        (event) => {
+          changeInput(event.target.value);
+        }
+      }
+      onKeyPress={
+        (event) => {
+          if (event.key === 'Enter') {
+            // verifier si le chemin est bon
+            router.push(`/${term}`);
+            handleEnterPress(term);
           }
         }
-        onKeyPress={
-          (event) => {
-            if (event.key === 'Enter') {
-              handleEnterPress(term)
-            }
-          }
-        }
-        />
-    </div>
-  );
-}
+      }
+    />
+  </div>
+);
 
-const mapStateToProps = (state) => {
-  return {
+SearchBar.propTypes = {
+  term: React.PropTypes.string,
+  changeInput: React.PropTypes.func,
+  handleEnterPress: React.PropTypes.func,
+  router: React.PropTypes.object,
+};
+
+const mapStateToProps = state => (
+  {
     term: state.get('searchTerm'),
   }
-}
+);
 
-const mapDispatchToProps = (dispatch) => {
-  return {
+const mapDispatchToProps = dispatch => (
+  {
     changeInput: (term) => {
-      dispatch(changeTermAction(term))
+      dispatch(changeTermAction(term));
     },
     handleEnterPress: (term) => {
-      dispatch(connectMqtt(term))
+      dispatch(connectMqttAction(term));
     },
   }
-}
+);
 
 
-export default connect(mapStateToProps, mapDispatchToProps)(SearchBar)
+export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SearchBar));
