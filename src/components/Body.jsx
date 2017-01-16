@@ -6,24 +6,34 @@ import SensorList from './SensorList';
 import Information from './Information';
 import TopBar from './TopBar';
 
+import { connectMqttAction } from '../redux/actions';
 
-const Body = ({ isConnect }) => {
-  let contents = (
-    <div className='AppContainer'>
-      <SensorList />
-      <Information />
-    </div>
-  );
-  if (isConnect !== 'ON') {
-    contents = 'Loading';
+class Body extends React.Component {
+  constructor({ connectTo, params }) {
+    super();
+    connectTo(params.adresse);
   }
-  return (
-    <div>
-      <TopBar />
-      {contents}
-    </div>
-  );
-};
+
+  render() {
+    let contents = (
+      <div className='AppContainer'>
+        <SensorList />
+        <Information />
+      </div>
+    );
+    if (this.props.isConnect === 'OFF') {
+      contents = 'MQTT is disconnect (Error ?)';
+    } else if (this.props.isConnect === 'FETCHING') {
+      contents = 'Loading';
+    }
+    return (
+      <div>
+        <TopBar />
+        {contents}
+      </div>
+    );
+  }
+}
 
 Body.propTypes = {
   isConnect: React.PropTypes.string,
@@ -35,4 +45,12 @@ const mapStateToProps = state => (
   }
 );
 
-export default connect(mapStateToProps, null)(Body);
+const mapDispatchToProps = dispatch => (
+  {
+    connectTo: (term) => {
+      dispatch(connectMqttAction(term));
+    },
+  }
+);
+
+export default connect(mapStateToProps, mapDispatchToProps)(Body);

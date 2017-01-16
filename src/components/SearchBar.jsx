@@ -6,9 +6,9 @@ import { withRouter } from 'react-router';
 
 import styles from '../css/SearchBar.css';
 
-import { changeTermAction, connectMqttAction } from '../redux/actions';
+import { changeTermAction } from '../redux/actions';
 
-const SearchBar = ({ term, changeInput, handleEnterPress, router }) => (
+const SearchBar = ({ term, changeInput, router }) => (
   <div className='SearchBarContainer'>
     <h3>URL du Brocker:</h3>
     <input
@@ -20,9 +20,8 @@ const SearchBar = ({ term, changeInput, handleEnterPress, router }) => (
       onKeyPress={
         (event) => {
           if (event.key === 'Enter') {
-            // verifier si le chemin est bon
+            // aller à la page pour ce connecter
             router.push(`/${term}`);
-            handleEnterPress(term);
           }
         }
       }
@@ -48,11 +47,7 @@ const mapDispatchToProps = dispatch => (
     changeInput: (term) => {
       dispatch(changeTermAction(term));
     },
-    handleEnterPress: (term) => {
-      dispatch(connectMqttAction(term));
-    },
   }
 );
-
 
 export default connect(mapStateToProps, mapDispatchToProps)(withRouter(SearchBar));
