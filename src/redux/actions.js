@@ -9,13 +9,13 @@ export const changeTermAction = term => (
 
 export const fetchingConnectAction = () => ({ type: 'FETCH_CONNECT' });
 
-export const fetchingErrorAction = () => (
+const fetchingErrorAction = () => (
   {
     type: 'FETCH_ERROR',
     error: 'Une erreur est survenue ...',
   }
 );
-export const fetchingSuccessAction = client => (
+const fetchingSuccessAction = client => (
   {
     type: 'FETCH_SUCCESS',
     client,
@@ -27,13 +27,9 @@ export const connectMqttAction = address => (
     dispatch(fetchingConnectAction());
     return (
       new Promise(
-        (resolve) => {
-          setTimeout(() => (resolve(initConnection(address))), 1000);
-        },
-      ).then(
-        (client) => {
-          dispatch(fetchingSuccessAction(client));
-        })
+        (resolve) => { setTimeout(() => (resolve(initConnection(address))), 3000); })
+        .then((client) => { dispatch(fetchingSuccessAction(client)); })
+        .catch(() => { dispatch(fetchingErrorAction()); })
     );
   }
 );
@@ -49,11 +45,11 @@ export const addAction = sensor => (
   }
 );
 
-export const updateAction = (id, value) => (
+export const updateAction = (id, data) => (
   {
     type: 'UPDATE_SENSOR',
     id,
-    value,
+    data,
   }
 );
 

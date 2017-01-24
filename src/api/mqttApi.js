@@ -7,7 +7,6 @@ import { store } from '../index';
 
 export function initConnection(chemin) {
   const clientMQTT = mqtt.connect(`mqtt://${chemin}`);
-  setTimeout(null, 3000);
   return clientMQTT;
 }
 
@@ -33,7 +32,7 @@ export function listening(clientMQTT) {
       }
     } else {
       // console.log("Update");
-      store.dispatch(updateAction(id, value));
+      store.dispatch(updateAction(split[1], data));
     }
   });
   return clientMQTT;

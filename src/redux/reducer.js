@@ -33,7 +33,7 @@ export default (state = INITIAL_STATE, action) => {
       return addSensor(state, action.sensor);
 
     case 'UPDATE_SENSOR':
-      return updateSensor(state, action.id, action.value);
+      return updateSensor(state, action.id, action.data);
 
     case 'SELECT_SENSOR':
       return selectSensor(state, action.id);

@@ -1,20 +1,24 @@
 import React from 'react';
 
 import { connect } from 'react-redux';
+/* //TODO : router vers information (:/sensor)
+import { Link } from 'react-router';*/
+import { ListItem } from 'material-ui/List';
+
 import { selectAction } from '../redux/actions';
 
 const Sensor = ({ id, selectSensor }) => (
-  <div>
-    <button onClick={ () => { selectSensor(id); } }>
-      {id}
-    </button>
-  </div>
+  <ListItem
+    onClick={ () => { selectSensor(id); } }
+  >
+    { id }
+  </ListItem>
 );
 
 Sensor.propTypes = {
   id: React.PropTypes.string,
   selectSensor: React.PropTypes.func,
-};
+}.isRequired;
 
 const mapDispatchToProps = dispatch => (
   {

@@ -9,7 +9,9 @@ export const INITIAL_STATE = Map()
   .set('searchTerm', '')
   .set('information', {
     id: '',
+    type: '',
     data: '',
+    history: List(),
   })
   ;
 
@@ -23,34 +25,40 @@ export const closeMqtt = (state) => {
 
 export const listen = state => state.set('clientMQTT', listening(state.get('clientMQTT')));
 
-export const addSensor = (state, sensor) => state.set('sensors', state.get('sensors').push(sensor));
+export const addSensor = (state, sensor) => {
+  const newSensor = {
+    id: sensor.id,
+    type: sensor.type,
+    data: sensor.data.value,
+    history: List(),
+  };
 
-export const selectSensor = (state, id) => {
-  const sensor = [];
-  state.get('sensors').map(
-    (object, i) => {
-      if (object.id === id) {
-        sensor.id = object.id;
-        sensor.data = object.data;
-      }
-    },
-  );
-  return state.set('information', sensor);
+  return state.set('sensors', state.get('sensors').push(newSensor));
 };
 
-export const updateSensor = (state, id, value) => {
-  let nextState = state;
+// FIXME: pourquoi obligé de repassé à {} ?
+export const selectSensor = (state, id) => (
+  state.set('information', {})
+  .set('information', state.get('sensors').find(s => (s.id === id)))
+);
 
-  state.get('sensors').map(
-    (object, i) => {
-      if (object.id === id) {
-        const sensor = state.get('sensors').get(i);
-        sensor.data.value = value;
-        const nextSensors = state.get('sensors').set(i, sensor);
-        nextState = state.set('sensors', nextSensors);
-      }
-    },
-  );
+export const updateSensor = (state, id, data) => {
+  const sensors = state.get('sensors');
+  const sensor = sensors.find(s => (s.id === id));
+
+  sensor.history = sensor.history.push({
+    data: sensor.data,
+    date: new Date(),
+  });
+  sensor.data = data.value;
+  const index = sensor.history.count();
+  if (index >= 10) {
+    sensor.history = sensor.history.slice(-10);
+  }
+
+  const nextSensors = state.get('sensors').set(sensors.findKey(s => (s.id === id)), sensor);
+  const nextState = state.set('sensors', nextSensors);
+
   // mettre a jour la vue information si l'id est le meme
   if (nextState.get('information').id === id) {
     return selectSensor(nextState, id);
