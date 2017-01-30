@@ -14,6 +14,7 @@ import reducer from './redux/reducer';
 
 import App from './App';
 import Body from './components/Body';
+import Body2 from './components/Body2';
 /* //TODO : router vers information (:/sensor)
 import Information from './components/Information';*/
 
@@ -35,9 +36,10 @@ ReactDOM.render(
     <MuiThemeProvider>
       <Router history={ browserHistory }>
         <Route path='/' component={ App } />
-        <Route path='/(:adresse)' component={ Body } >
+        <Route path='/live/(:adresse)' component={ Body } >
           {/*<Route path='/(:adresse)/(:sensor)' component={ Information } />*/}
         </Route>
+        <Route path='/sensors' component={ Body2 } />
       </Router>
     </MuiThemeProvider>
   </Provider>,

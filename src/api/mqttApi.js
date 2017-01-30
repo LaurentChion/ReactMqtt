@@ -1,6 +1,6 @@
 import mqtt from 'mqtt';
 
-import Sensor from '../model/Sensor';
+import Sensor from '../modelBase/Sensor';
 
 import { addAction, updateAction } from '../redux/actions';
 import { store } from '../index';

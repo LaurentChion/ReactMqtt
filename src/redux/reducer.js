@@ -6,7 +6,9 @@ import {
   closeMqtt,
   addSensor,
   updateSensor,
-  selectSensor } from './core';
+  selectSensor,
+  fetchSensorsBdd,
+  fetchSensorBdd } from './core';
 
 export default (state = INITIAL_STATE, action) => {
   switch (action.type) {
@@ -37,6 +39,24 @@ export default (state = INITIAL_STATE, action) => {
 
     case 'SELECT_SENSOR':
       return selectSensor(state, action.id);
+
+    case 'FETCHING_SENSORS':
+      return state.set('fetching', true);
+
+    case 'FETCH_SENSORS_ERROR':
+      return state.set('fetching', false);
+
+    case 'FETCH_SENSORS_SUCCESS':
+      return fetchSensorsBdd(state, action.sensors);
+
+    case 'FETCHING_SENSOR':
+      return state.set('fetchingSensor', true);
+
+    case 'FETCH_SENSOR_ERROR':
+      return state.set('fetchingSensor', false);
+
+    case 'FETCH_SENSOR_SUCCESS':
+      return fetchSensorBdd(state, action.id, action.data);
 
     default:
       return state;

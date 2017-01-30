@@ -28,10 +28,16 @@ const style = {
     backgroundColor: 'rgba(0, 0, 0, 0.8)',
   },
   hint: {
-    color: '#bbbbbb',
+    color: '#888888',
   },
   input: {
     color: '#dddddd',
+  },
+  floatingLabelStyle: {
+    color: '#dddddd',
+  },
+  floatingLabelFocusStyle: {
+    color: '#2196F3',
   },
 };
 
@@ -41,7 +47,10 @@ const SearchBar = ({ term, changeInput, router }) => (
       style={ style.field }
       hintStyle={ style.hint }
       inputStyle={ style.input }
-      hintText='URL du Brocker'
+      hintText='localhost:XXXX'
+      floatingLabelText='URL du Brocker'
+      floatingLabelStyle={ style.floatingLabelStyle }
+      floatingLabelFocusStyle={ style.floatingLabelFocusStyle }
       onChange={
         (event) => {
           changeInput(event.target.value);
@@ -51,7 +60,7 @@ const SearchBar = ({ term, changeInput, router }) => (
         (event) => {
           if (event.key === 'Enter') {
             // aller à la page pour ce connecter
-            router.push(`/${term}`);
+            router.push(`/live/${term}`);
           }
         }
       }

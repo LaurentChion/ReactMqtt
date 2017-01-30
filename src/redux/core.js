@@ -13,6 +13,8 @@ export const INITIAL_STATE = Map()
     data: '',
     history: List(),
   })
+  .set('fetching', false)
+  .set('fetchingSensor', false)
   ;
 
 export const changeTerm = (state, term) => state.set('searchTerm', term);
@@ -64,4 +66,48 @@ export const updateSensor = (state, id, data) => {
     return selectSensor(nextState, id);
   }
   return nextState;
+};
+
+// FIXME: gérer le JSON et l'ajouté à la liste de sensor
+export const fetchSensorsBdd = (state, sensors) => {
+  const data = List(sensors.data);
+  let nextSensor = List();
+
+  data.map(
+    (object) => {
+      nextSensor = nextSensor.push({
+        id: object._id,
+        type: object.type,
+      });
+    },
+  );
+
+  return state.set('fetching', false).set('sensors', new List(nextSensor));
+};
+
+export const fetchSensorBdd = (state, id, result) => {
+  const data = List(result.data);
+  let nextHistory = List();
+
+  data.map(
+    (object) => {
+      nextHistory = nextHistory.push({
+        date: object.date,
+        data: object.value,
+      });
+    },
+  );
+
+  const sensor = state.get('sensors').find(obj => obj.id === id);
+
+  const nextInformation = {
+    id,
+    type: sensor.type,
+    data: sensor.data,
+    history: nextHistory,
+  };
+
+  console.log('test');
+  console.log(JSON.stringify(state.set('fetchingSensor', false).set('information', nextInformation)));
+  return state.set('fetchingSensor', false).set('information', {}).set('information', nextInformation);
 };
