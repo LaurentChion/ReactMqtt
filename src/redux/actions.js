@@ -97,7 +97,7 @@ export const fetchSensors = () => (
     return (
        new Promise(
          (resolve) => {
-           resolve(fetch('http://localhost:8090/v0/sensors/', fError, fSuccess));
+           resolve(fetch('http://webservice:8090/v0/sensors/', fError, fSuccess));
          })
     );
   }
@@ -134,7 +134,7 @@ export const fetchSensor = (id, dateDebut = -1, duree = -1) => (
     return (
       new Promise(
         (resolve) => {
-          resolve(fetch(`http://localhost:8090/v0/sensor/${id}`, fError, fSuccess));
+          resolve(fetch(`http://webservice:8090/v0/sensor/${id}`, fError, fSuccess));
         })
     );
   }
