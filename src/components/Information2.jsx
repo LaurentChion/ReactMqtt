@@ -10,8 +10,7 @@ const style = {
   },
 };
 
-const Information = ({ id, type, value }) => {
-
+const Information = ({ id, type }) => {
   let history;
   switch (type) {
     case 'POSITIVE_NUMBER' :
@@ -40,7 +39,6 @@ const mapStateToProps = state => (
 Information.propTypes = {
   id: React.PropTypes.string,
   type: React.PropTypes.string,
-  value: React.PropTypes.string,
 }.isRequired;
 
 export default connect(mapStateToProps, null)(Information);

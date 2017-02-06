@@ -9,6 +9,8 @@ export const changeTermAction = term => (
   }
 );
 
+const subscribeAction = () => ({ type: 'SUBSCRIBE' });
+
 export const fetchingConnectAction = () => ({ type: 'FETCH_CONNECT' });
 
 const fetchingErrorAction = () => (
@@ -30,7 +32,10 @@ export const connectMqttAction = address => (
     return (
       new Promise(
         (resolve) => { setTimeout(() => (resolve(initConnection(address))), 3000); })
-        .then((client) => { dispatch(fetchingSuccessAction(client)); })
+        .then((client) => {
+          dispatch(fetchingSuccessAction(client));
+          dispatch(subscribeAction());
+        })
         .catch(() => { dispatch(fetchingErrorAction()); })
     );
   }
@@ -38,7 +43,6 @@ export const connectMqttAction = address => (
 
 export const closeMqttAction = () => ({ type: 'CLOSE_MQTT' });
 
-export const subscribeAction = () => ({ type: 'SUBSCRIBE' });
 
 export const addAction = sensor => (
   {

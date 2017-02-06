@@ -92,7 +92,7 @@ export const fetchSensorBdd = (state, id, result) => {
   data.map(
     (object) => {
       nextHistory = nextHistory.push({
-        date: object.date,
+        date: new Date(object.date),
         data: object.value,
       });
     },
@@ -107,7 +107,5 @@ export const fetchSensorBdd = (state, id, result) => {
     history: nextHistory,
   };
 
-  console.log('test');
-  console.log(JSON.stringify(state.set('fetchingSensor', false).set('information', nextInformation)));
   return state.set('fetchingSensor', false).set('information', {}).set('information', nextInformation);
 };

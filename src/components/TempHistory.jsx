@@ -24,27 +24,49 @@ class TempHistory extends React.Component {
     graph.remove();
   }
 
-  // FIXME: corrigé la courbe
   initAndUpdateD3() {
     const { history } = this.props;
-    const values = history.map(h => h.data).toJS();
-    const dates = history.map(h => h.date.getTime() / 10).toJS();
+
+    const data = history.map(h => (
+      {
+        value: h.data,
+        date: h.date,
+      }),
+    ).toJS();
 
     const nbValeur = history.count();
-    console.log(nbValeur);
 
-    const m = [80, 80, 80, 80];
+    const m = [20, 20, 20, 80];
     const w = 500;
-    const h = 200;
-    // redimensionner l'interval dates[0], dates[nbValeur - 1] entre 0 et 500 pixel
-    const x = d3.scaleLinear().domain([dates[0], dates[nbValeur - 1]]).range([0, w]);
-    // redimensionner l'interval -100, 100 entre 0 et 500 pixel
-    const y = d3.scaleLinear().domain([-100, 100]).range([h, 0]);
+    const h = 100;
 
-    const line = d3.line()
-      .x((d, i) => x(i))
-      .y(d => d);
+    const dateMin = data[0].date;
+    const dateMax = data[nbValeur - 1].date;
 
+    // FIXME: calculé min et max
+    let tempMin = data[0].value;
+    let tempMax = data[0].value;
+
+    for (let i = 1; i < nbValeur; i += 1) {
+      if (data[i].value < tempMin) {
+        tempMin = data[i].value;
+      }
+      if (data[i].value > tempMax) {
+        tempMax = data[i].value;
+      }
+    }
+
+    // redimensionner l'interval des dates
+    const xScale = d3.scaleTime().range([0, w]).domain([dateMin, dateMax]);
+    // redimensionner l'interval des valeurs
+    const yScale = d3.scaleLinear().range([h, 0]).domain([tempMin, tempMax]);
+
+    // définir la fonction qui génère la ligne
+    const lineGen = d3.line()
+      .x(d => xScale(d.date))
+      .y(d => yScale(d.value));
+
+    // creation du svg de base
     d3.select(this.graph).selectAll('*').remove();
     graph = d3.select(this.graph)
       .append('svg:svg')
@@ -52,31 +74,27 @@ class TempHistory extends React.Component {
       .attr('height', h + m[0] + m[2])
       .append('svg:g')
       .attr('transform', `translate(${m[3]}, ${m[0]})`);
-    // create yAxis
-    const xAxis = d3.axisBottom().scale(x).tickSize(-h);
-    // Add the x-axis.
+
+    // Ajout de l'axe x au svg
+    const xAxis = d3.axisBottom().scale(xScale).tickSize(-h);
     graph.append('svg:g')
       .attr('class', 'x axis')
       .attr('transform', `translate(0, ${h})`)
       .call(xAxis);
-      // create left yAxis
-    const yAxisLeft = d3.axisLeft().scale(y).ticks(4);
-    // Add the y-axis to the left
+
+    // Ajout de l'axe y au svg
+    const yAxisLeft = d3.axisLeft().scale(yScale).ticks(4);
     graph.append('svg:g')
     .attr('class', 'y axis')
     .attr('transform', 'translate(-25,0)')
     .call(yAxisLeft);
 
-
-    /* svg = d3.select(this.svg);
-    svg.selectAll('.block').remove().exit();
-    svg.selectAll('.block').data(values)
-    .enter()
-    .append('circle')
-    .classed('block', 1)
-    .attr('cx', (d, i) => dates[i] - dates[0])
-    .attr('cy', 100)
-    .attr('r', d => Math.abs(parseInt(d, 10) / 2));*/
+    // ajout de la ligne au svg
+    graph.append('svg:path')
+    .attr('d', lineGen(data))
+    .attr('stroke-width', 2)
+    .attr('stroke', 'blue')
+    .attr('fill', 'none');
   }
 
   render() {
