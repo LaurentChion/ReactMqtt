@@ -123,7 +123,28 @@ export const fetchSensorSuccess = (id, data) => (
   }
 );
 
-export const fetchSensor = (id, dateDebut = -1, duree = -1) => (
+export const changeDateAction = date => (
+  {
+    type: 'CHANGE_DATE',
+    date,
+  }
+);
+
+export const changePeriodAction = period => (
+  {
+    type: 'CHANGE_PERIOD',
+    period,
+  }
+);
+
+export const changeTimeAction = time => (
+  {
+    type: 'CHANGE_TIME',
+    time,
+  }
+);
+
+export const fetchSensor = (id, date, period) => (
   (dispatch) => {
     dispatch({ type: 'FETCHING_SENSOR' });
 
@@ -138,7 +159,7 @@ export const fetchSensor = (id, dateDebut = -1, duree = -1) => (
     return (
       new Promise(
         (resolve) => {
-          resolve(fetch(`http://localhost:8090/v0/sensor/${id}`, fError, fSuccess));
+          resolve(fetch(`http://localhost:8090/v0/sensor/${id}?date=${date}&time=${period}`, fError, fSuccess));
         })
     );
   }

@@ -39,7 +39,7 @@ ReactDOM.render(
         <Route path='/live/(:adresse)' component={ Body } >
           {/*<Route path='/(:adresse)/(:sensor)' component={ Information } />*/}
         </Route>
-        <Route path='/sensors' component={ Body2 } />
+        {/*<Route path='/sensors' component={ Body2 } />*/}
       </Router>
     </MuiThemeProvider>
   </Provider>,

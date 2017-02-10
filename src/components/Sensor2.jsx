@@ -6,9 +6,9 @@ import { ListItem } from 'material-ui/List';
 
 import { fetchSensor } from '../redux/actions';
 
-const Sensor2 = ({ id, selectSensor }) => (
+const Sensor2 = ({ id, selectSensor, date, time, period }) => (
   <ListItem
-    onClick={ () => { selectSensor(id); } }
+    onClick={ () => { selectSensor(id, date, time, period); } }
   >
     { id }
   </ListItem>
@@ -19,12 +19,22 @@ Sensor2.propTypes = {
   selectSensor: React.PropTypes.func,
 }.isRequired;
 
+const mapStateToProps = state => (
+  {
+    date: state.get('date'),
+    time: state.get('time'),
+    period: state.get('period'),
+  }
+);
+
 const mapDispatchToProps = dispatch => (
   {
-    selectSensor: (id) => {
-      dispatch(fetchSensor(id));
+    selectSensor: (id, date, time, period) => {
+      const concat = new Date(date);
+      concat.setTime(time);
+      dispatch(fetchSensor(id, concat.toISOString(), period));
     },
   }
 );
 
-export default connect(null, mapDispatchToProps)(Sensor2);
+export default connect(mapStateToProps, mapDispatchToProps)(Sensor2);

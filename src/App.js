@@ -7,7 +7,7 @@ import BddIcon from 'material-ui/svg-icons/device/storage';
 import SwipeableViews from 'react-swipeable-views';
 
 import SearchBar from './components/SearchBar';
-import ViewApi from './components/ViewApi';
+import Body2 from './components/Body2';
 
 const styles = {
   headline: {
@@ -55,7 +55,7 @@ class App extends React.Component {
           </div>
           <div style={ styles.slide }>
             <div>
-              <ViewApi />
+              <Body2 />
             </div>
           </div>
         </SwipeableViews>

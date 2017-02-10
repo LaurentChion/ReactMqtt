@@ -58,6 +58,15 @@ export default (state = INITIAL_STATE, action) => {
     case 'FETCH_SENSOR_SUCCESS':
       return fetchSensorBdd(state, action.id, action.data);
 
+    case 'CHANGE_DATE' :
+      return state.set('date', action.date);
+
+    case 'CHANGE_PERIOD' :
+      return state.set('period', action.period);
+
+    case 'CHANGE_TIME' :
+      return state.set('time', action.time);
+
     default:
       return state;
 

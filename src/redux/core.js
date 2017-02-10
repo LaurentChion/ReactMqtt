@@ -15,6 +15,9 @@ export const INITIAL_STATE = Map()
   })
   .set('fetching', false)
   .set('fetchingSensor', false)
+  .set('date', '')
+  .set('time', '')
+  .set('period', 'now')
   ;
 
 export const changeTerm = (state, term) => state.set('searchTerm', term);
