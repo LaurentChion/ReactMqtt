@@ -1,3 +1,5 @@
+[![Known Vulnerabilities](https://snyk.io/test/github/laurentchion/reactmqtt/badge.svg)](https://snyk.io/test/github/laurentchion/reactmqtt)
+
 # An IoT app to visualize sensor
 
 You can : 
